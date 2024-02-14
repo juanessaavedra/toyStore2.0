@@ -20,7 +20,7 @@ public class ToyStore {
         do {
             Scanner s = new Scanner(System.in);
             System.out.println("MENU");
-            System.out.println("0. Exit \n 1. Toys for each type   \n2. Add Toys  \n 3. List Toys \n 4.Show total toys");
+            System.out.println("0. Exit \n 1. Toys for each type   \n2. Add Toys  \n 3. List Toys \n 4.Show total toys \n 5. Show total prices");
             option = s.next();
             switch (option) {
 
@@ -28,7 +28,7 @@ public class ToyStore {
                     System.out.println("Toys for each type");
                     System.out.println("Enter the toy name");
                     String name = s.next();
-                    System.out.println(service.eachType());
+                   // System.out.println(service.eachType());
                 }
                 case "2" -> {
                     System.out.println("ADD TOY");

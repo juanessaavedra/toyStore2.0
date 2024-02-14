@@ -36,7 +36,7 @@ public class ToyServiceImpl implements ToyService {
 
     @Override
     public ToyDTO eachType(Integer quantity) throws Exception {
-
+        return null;
     };
 
 
