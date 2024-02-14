@@ -50,5 +50,14 @@ public class ToyServiceImpl implements ToyService {
                 .anyMatch(t -> t.getName().equalsIgnoreCase(name));
     }
 
+    @Override
+    public Integer totalToys() throws Exception {
+        Integer addition = 0;
+            for (Toy t: toyList) {
+                addition+= t.getQuantity();
+            }
+            return  addition;
+    }
+
 
 }

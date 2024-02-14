@@ -54,7 +54,7 @@ public class ToyStore {
 //
                 case "4"->{
                     System.out.println("SHOW TOTAL TOYS");
-                    System.out.println("Total toys: "+ service.listToys());
+                    System.out.println("Total toys: "+ service.totalToys());
                 }
 
 //

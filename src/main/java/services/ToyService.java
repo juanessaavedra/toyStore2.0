@@ -15,6 +15,8 @@ public interface ToyService {
 
     boolean verifyToyExists (String name);
 
+    Integer totalToys () throws Exception;
+
 
 
 
