@@ -35,14 +35,10 @@ public class ToyServiceImpl implements ToyService {
     }
 
     @Override
-    public ToyDTO search(String name) throws Exception {
-        if(verifyToyExists(name)){
-            List<ToyDTO> list = toyList.stream().filter(toyList-> Objects.equals(toyList.getName(), name))
-                    .findFirst().stream().map(ToyMapper::mapFrom).toList();
-            return list.get(0);
-        }
-        throw new Exception("Not found");
-    }
+    public ToyDTO eachType(Integer quantity) throws Exception {
+
+    };
+
 
     @Override
     public boolean verifyToyExists(String name) {
@@ -57,6 +53,15 @@ public class ToyServiceImpl implements ToyService {
                 addition+= t.getQuantity();
             }
             return  addition;
+    }
+
+    @Override
+    public Integer totalPrices() throws Exception {
+        Integer additionPrices = 0;
+        for (Toy t: toyList) {
+            additionPrices+= t.getPrice();
+        }
+        return  additionPrices;
     }
 
 

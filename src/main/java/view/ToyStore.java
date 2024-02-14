@@ -20,15 +20,15 @@ public class ToyStore {
         do {
             Scanner s = new Scanner(System.in);
             System.out.println("MENU");
-            System.out.println("0. Exit \n 1.Search Toys  \n2. Add Toys  \n 3. List Toys \n 4.Show total toys");
+            System.out.println("0. Exit \n 1. Toys for each type   \n2. Add Toys  \n 3. List Toys \n 4.Show total toys");
             option = s.next();
             switch (option) {
 
                 case "1" -> {
-                    System.out.println("SEARCH");
+                    System.out.println("Toys for each type");
                     System.out.println("Enter the toy name");
                     String name = s.next();
-                    System.out.println(service.search(name));
+                    System.out.println(service.eachType());
                 }
                 case "2" -> {
                     System.out.println("ADD TOY");
@@ -55,6 +55,11 @@ public class ToyStore {
                 case "4"->{
                     System.out.println("SHOW TOTAL TOYS");
                     System.out.println("Total toys: "+ service.totalToys());
+                }
+
+                case "5" -> {
+                    System.out.println("SHOW TOTAL PRICES");
+                    System.out.println("Total prices:" + service.totalPrices());
                 }
 
 //

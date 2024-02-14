@@ -23,6 +23,3 @@ public enum ToyType  {
 }
 
 
-//Equals:
-
-//Value: Es que coincida con el valor ahi si lo puede lanzar

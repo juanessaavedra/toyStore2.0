@@ -11,11 +11,13 @@ public interface ToyService {
     List<ToyDTO> addToy (ToyDTO toy) throws  Exception;
     List<ToyDTO> listToys();
 
-    ToyDTO search (String name) throws Exception;
+    ToyDTO eachType (Integer quantity) throws Exception;
 
     boolean verifyToyExists (String name);
 
     Integer totalToys () throws Exception;
+
+    Integer totalPrices () throws Exception;
 
 
 
