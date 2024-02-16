@@ -1,6 +1,7 @@
 package services;
 
 import mapping.dtos.ToyDTO;
+import model.Toy;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,12 @@ public interface ToyService {
     Integer totalToys () throws Exception;
 
     Integer totalPrices () throws Exception;
+
+    <List> ToyDTO increase (ToyDTO toyDTO, int quantity)throws Exception;
+
+    <List> ToyDTO decrease (ToyDTO toyDTO, int quantity) throws Exception;
+
+    ToyDTO findById (String id);
 
 
 

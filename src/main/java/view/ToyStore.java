@@ -20,7 +20,7 @@ public class ToyStore {
         do {
             Scanner s = new Scanner(System.in);
             System.out.println("MENU");
-            System.out.println("0. Exit \n 1. Toys for each type   \n2. Add Toys  \n 3. List Toys \n 4.Show total toys \n 5. Show total prices");
+            System.out.println("0. Exit \n 1. Toys for each type   \n2. Add Toys  \n 3. List Toys \n 4.Show total toys \n 5. Show total prices \n  6. Increase \n 7. Decrease");
             option = s.next();
             switch (option) {
 
@@ -60,6 +60,26 @@ public class ToyStore {
                 case "5" -> {
                     System.out.println("SHOW TOTAL PRICES");
                     System.out.println("Total prices:" + service.totalPrices());
+                }
+
+                case "6" -> {
+                    System.out.println("INCREASE");
+                    System.out.println("Enter the id toy");
+                    String id = s.next();
+                    System.out.println("Enter the amount");
+                    int amount = Integer.parseInt(s.next());
+                    ToyDTO toyStoreDTO = service.findById(id);
+                    System.out.println(service.increase(toyStoreDTO, amount));
+                }
+
+                case "7" -> {
+                    System.out.println("DECREASE");
+                    System.out.println("Enter the id toy");
+                    String id = s.next();
+                    System.out.println("Enter the amount");
+                    int amount = Integer.parseInt(s.next());
+                    ToyDTO toyStoreDTO = service.findById(id);
+                    System.out.println(service.decrease(toyStoreDTO, amount));
                 }
 
 //

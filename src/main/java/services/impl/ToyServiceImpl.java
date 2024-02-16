@@ -64,5 +64,38 @@ public class ToyServiceImpl implements ToyService {
         return  additionPrices;
     }
 
+    @Override
+    public <List> ToyDTO increase(ToyDTO toyDTO, int quantity) throws Exception {
+        for (Toy toy1: toyList) {
+            if (toy1.getId().equals(toyDTO.id())) {
+                int nuevaCantidad = toy1.getQuantity() + quantity;
+                toy1.setQuantity(nuevaCantidad);
+
+                break;
+            }
+        }
+        return toyDTO;
+    }
+
+    @Override
+    public <List> ToyDTO decrease(ToyDTO toyDTO, int quantity) throws Exception {
+        for (Toy toy1: toyList) {
+            if (toy1.getId().equals(toyDTO.id())) {
+                int nuevaCantidad = toy1.getQuantity() - quantity;
+                toy1.setQuantity(nuevaCantidad);
+
+                break;
+            }
+        }
+        return toyDTO;
+    }
+
+    @Override
+    public ToyDTO findById(String id) {
+        List<ToyDTO> list = toyList.stream().filter(toyList-> Objects.equals(toyList.getId(), id))
+                .findFirst().stream().map(ToyMapper::mapFrom).toList();
+        return list.get(0);
+    }
+
 
 }
