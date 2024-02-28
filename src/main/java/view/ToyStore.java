@@ -28,7 +28,7 @@ public class ToyStore {
                     System.out.println("Toys for each type");
                     System.out.println("Enter the toy name");
                     String name = s.next();
-                   // System.out.println(service.eachType());
+                    System.out.println(service.showByType());
                 }
                 case "2" -> {
                     System.out.println("ADD TOY");

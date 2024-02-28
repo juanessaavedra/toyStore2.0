@@ -3,17 +3,22 @@ package services.impl;
 import mapping.dtos.ToyDTO;
 import mapping.mappers.ToyMapper;
 import model.Toy;
+import model.ToyType;
 import services.ToyService;
 import utils.Constants;
 import utils.FileUtils;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ToyServiceImpl implements ToyService {
 
     private List<Toy> toyList;
 
+    public void setToyList(List<model.Toy> toyList) {
+        this.toyList = toyList;
+    }
     public ToyServiceImpl() {
             toyList = FileUtils.getToys(new File(Constants.PATH_TOYS));
         }
@@ -34,10 +39,6 @@ public class ToyServiceImpl implements ToyService {
         return toyList.stream().map(ToyMapper::mapFrom).toList();
     }
 
-    @Override
-    public ToyDTO eachType(Integer quantity) throws Exception {
-        return null;
-    };
 
 
     @Override
@@ -68,8 +69,8 @@ public class ToyServiceImpl implements ToyService {
     public <List> ToyDTO increase(ToyDTO toyDTO, int quantity) throws Exception {
         for (Toy toy1: toyList) {
             if (toy1.getId().equals(toyDTO.id())) {
-                int nuevaCantidad = toy1.getQuantity() + quantity;
-                toy1.setQuantity(nuevaCantidad);
+                int newQuantity = toy1.getQuantity() + quantity;
+                toy1.setQuantity(newQuantity);
 
                 break;
             }
@@ -81,8 +82,8 @@ public class ToyServiceImpl implements ToyService {
     public <List> ToyDTO decrease(ToyDTO toyDTO, int quantity) throws Exception {
         for (Toy toy1: toyList) {
             if (toy1.getId().equals(toyDTO.id())) {
-                int nuevaCantidad = toy1.getQuantity() - quantity;
-                toy1.setQuantity(nuevaCantidad);
+                int newQuantity = toy1.getQuantity() - quantity;
+                toy1.setQuantity(newQuantity);
 
                 break;
             }
@@ -96,6 +97,19 @@ public class ToyServiceImpl implements ToyService {
                 .findFirst().stream().map(ToyMapper::mapFrom).toList();
         return list.get(0);
     }
+
+    @Override
+    public Map<ToyType, Integer> showByType() throws Exception {
+        if(toyList!=null) {
+            Map<ToyType, Integer> showByType = new TreeMap<>();
+            for (model.Toy toy : toyList) {
+                ToyType type = toy.getType();
+                showByType.put(type, showByType.getOrDefault(type, 0) + 1);
+            }
+            return showByType;
+        } throw new Exception("Null");
+    }
+
 
 
 }
