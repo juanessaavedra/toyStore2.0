@@ -10,6 +10,8 @@ import utils.FileUtils;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class ToyServiceImpl implements ToyService {
@@ -43,6 +45,7 @@ public class ToyServiceImpl implements ToyService {
 
     @Override
     public boolean verifyToyExists(String name) {
+
         return toyList.stream()
                 .anyMatch(t -> t.getName().equalsIgnoreCase(name));
     }

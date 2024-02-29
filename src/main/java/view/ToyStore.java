@@ -1,5 +1,6 @@
 package view;
 
+import excepcions.SecondException;
 import mapping.dtos.ToyDTO;
 import model.Toy;
 import model.ToyType;
@@ -10,12 +11,16 @@ import javax.swing.*;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 
 public class ToyStore {
     public static void main(String[] args) throws Exception {
 
         String option = "1";
         ToyService service = new ToyServiceImpl();
+
+
+
 
         do {
             Scanner s = new Scanner(System.in);
@@ -41,16 +46,31 @@ public class ToyStore {
                     System.out.println("Choose type of toy: \n 0.Female \n 1.Male \n 2.Unisex");
                     ToyType type = ToyType.fromType(Integer.parseInt(s.next()));
                     service.addToy(new ToyDTO(name, id, price, +1, type ));
+
                 }
                 case "3" -> {
                     System.out.println("LIST TOYS");
-                    if (!service.listToys().isEmpty()) {
-                        System.out.println(service.listToys());
-                    } else {
-                        System.out.println("There isn't toys yet");
-                    }
-                }
+                    CompletableFuture<List<ToyDTO>> future = CompletableFuture.supplyAsync(() -> {
+                        List<ToyDTO> list = service.listToys();
+                        if (!list.isEmpty()) {
+                            for (ToyDTO toys : list) {
+                                System.out.println(toys);
+                                System.out.println("Loading...");
+                                try {
+                                    Thread.sleep(5000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } else {
+                            System.out.println("The list is empty");
+                        }
+                        return list;
+                    });
+                    future.join();
+                    System.out.println("Service completed");
 
+                }
 //
                 case "4"->{
                     System.out.println("SHOW TOTAL TOYS");
@@ -65,8 +85,12 @@ public class ToyStore {
                 case "6" -> {
                     System.out.println("INCREASE");
                     System.out.println("Enter the id toy");
+
                     String id = s.next();
-                    System.out.println("Enter the amount");
+                    if (id == null) {
+                        throw new SecondException("Id invalid"); //Exception lectura
+                    }
+                    System.out.println("Entaser the amount");
                     int amount = Integer.parseInt(s.next());
                     ToyDTO toyStoreDTO = service.findById(id);
                     System.out.println(service.increase(toyStoreDTO, amount));
@@ -78,6 +102,9 @@ public class ToyStore {
                     String id = s.next();
                     System.out.println("Enter the amount");
                     int amount = Integer.parseInt(s.next());
+                    if (id == null) {
+                        throw new SecondException("Id invalid");
+                    }
                     ToyDTO toyStoreDTO = service.findById(id);
                     System.out.println(service.decrease(toyStoreDTO, amount));
                 }
