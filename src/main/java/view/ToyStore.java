@@ -1,18 +1,6 @@
 package view;
 
-import excepcions.SecondException;
-import mapping.dtos.ToyDTO;
-import model.Toy;
-import model.ToyType;
-import services.ToyService;
-import services.impl.ToyServiceImpl;
-
-import javax.swing.*;
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.CompletableFuture;
-
+/**
 public class ToyStore {
     public static void main(String[] args) throws Exception {
 
@@ -115,3 +103,5 @@ public class ToyStore {
     }
 
 }
+
+ **/

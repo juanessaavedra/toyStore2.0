@@ -1,9 +1,6 @@
 package org.service.impl;
 
-import mapping.dtos.ToyDTO;
-import model.ToyType;
 import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import services.impl.ToyServiceImpl;
 

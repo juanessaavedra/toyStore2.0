@@ -2,11 +2,19 @@ package mapping.mappers;
 
 import mapping.dtos.ToyDTO;
 import model.Toy;
-import model.ToyType;
 
 public class ToyMapper {
-    public static Toy mapFrom (ToyDTO dto) {return new Toy(dto.name(), dto.id(), dto.price(), dto.quantity(), dto.type()); }
+    public static ToyDTO mapFromModel (Toy toy) {
+        return new ToyDTO(toy.getName(), toy.getId(), toy.getPrice(), toy.getQuantity(), toy.getType());
+    }
 
-    public static ToyDTO mapFrom (Toy model) {return new ToyDTO(model.getName(), model.getId(), model.getPrice(), model.getQuantity(), model.getType());}
+    public static Toy mapFromDTO (ToyDTO toy) {
+        return Toy.builder()
+                .name(toy.name())
+                .id(toy.id())
+                .price(toy.price())
+                .quantity(toy.quantity())
+                .type(toy.type())
+                .build();
+    }
 }
-

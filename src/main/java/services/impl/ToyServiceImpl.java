@@ -1,19 +1,7 @@
 package services.impl;
 
-import mapping.dtos.ToyDTO;
-import mapping.mappers.ToyMapper;
-import model.Toy;
-import model.ToyType;
-import services.ToyService;
-import utils.Constants;
-import utils.FileUtils;
 
-import java.io.File;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
+/**
 public class ToyServiceImpl implements ToyService {
 
     private List<Toy> toyList;
@@ -101,6 +89,7 @@ public class ToyServiceImpl implements ToyService {
         return list.get(0);
     }
 
+    /**
     @Override
     public Map<ToyType, Integer> showByType() throws Exception {
         if(toyList!=null) {
@@ -115,4 +104,7 @@ public class ToyServiceImpl implements ToyService {
 
 
 
+
 }
+
+ **/

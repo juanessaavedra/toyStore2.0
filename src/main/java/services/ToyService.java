@@ -1,13 +1,6 @@
 package services;
 
-import mapping.dtos.ToyDTO;
-import model.Toy;
-import model.ToyType;
-
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 public interface ToyService {
 
@@ -29,7 +22,7 @@ public interface ToyService {
 
     ToyDTO findById (String id);
 
-    Map<ToyType, Integer> showByType() throws Exception;
+   /** Map<ToyType, Integer> showByType() throws Exception; **/
 
 
 
