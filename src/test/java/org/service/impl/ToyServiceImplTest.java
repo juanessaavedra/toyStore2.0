@@ -1,5 +1,6 @@
 package org.service.impl;
 
+import model.ToyType;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import services.impl.ToyServiceImpl;
@@ -21,7 +22,7 @@ public class ToyServiceImplTest {
     @Test
     public void addToy_Successful() throws Exception {
         String name = "Esteban";
-        ToyType type = ToyType.M;
+        ToyType type = new ToyType(1, "Femenino");
         Integer price = 0;
         Integer quantity = 1;
         String id = "10";

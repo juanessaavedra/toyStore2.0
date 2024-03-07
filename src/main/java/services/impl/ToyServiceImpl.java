@@ -1,32 +1,39 @@
 package services.impl;
 
 
-/**
+import mapping.dtos.ToyDTO;
+import mapping.mappers.ToyMapper;
+import model.Toy;
+import repository.Repository;
+import repository.Toy.ToyRepositoryJDBCImpl;
+import services.ToyService;
+
+import java.util.List;
+
 public class ToyServiceImpl implements ToyService {
 
-    private List<Toy> toyList;
+    private Repository<Toy> toyRepository;
 
-    public void setToyList(List<model.Toy> toyList) {
-        this.toyList = toyList;
+
+
+
+    public ToyServiceImpl() {this.toyRepository = new ToyRepositoryJDBCImpl();
     }
-    public ToyServiceImpl() {
-            toyList = FileUtils.getToys(new File(Constants.PATH_TOYS));
-        }
 
     @Override
     public List<ToyDTO> addToy(ToyDTO toy) throws Exception {
         if (!verifyToyExists(toy.name())) {
-            toyList.add(ToyMapper.mapFrom(toy));
-            toyList.add(ToyMapper.mapFrom(toy));
-            FileUtils.saveContacts(new File(Constants.PATH_TOYS), toyList);
-            return toyList.stream().map(ToyMapper::mapFrom).toList();
+            toyRepository.save(ToyMapper.mapFromDTO(toy));
         }
         throw new Exception("The toy has already been created");
     }
 
     @Override
     public List<ToyDTO> listToys() {
-        return toyList.stream().map(ToyMapper::mapFrom).toList();
+        return toyRepository.list()
+                .stream()
+                .map(ToyMapper::mapFromModel)
+                .toList();
     }
 
 
@@ -83,13 +90,13 @@ public class ToyServiceImpl implements ToyService {
     }
 
     @Override
-    public ToyDTO findById(String id) {
+    public ToyDTO findById(int id) {
         List<ToyDTO> list = toyList.stream().filter(toyList-> Objects.equals(toyList.getId(), id))
                 .findFirst().stream().map(ToyMapper::mapFrom).toList();
         return list.get(0);
     }
 
-    /**
+
     @Override
     public Map<ToyType, Integer> showByType() throws Exception {
         if(toyList!=null) {
@@ -107,4 +114,3 @@ public class ToyServiceImpl implements ToyService {
 
 }
 
- **/

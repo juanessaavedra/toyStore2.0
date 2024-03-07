@@ -1,5 +1,7 @@
 package services;
 
+import mapping.dtos.ToyDTO;
+
 import java.util.List;
 
 public interface ToyService {
@@ -20,7 +22,7 @@ public interface ToyService {
 
     <List> ToyDTO decrease (ToyDTO toyDTO, int quantity) throws Exception;
 
-    ToyDTO findById (String id);
+    ToyDTO findById (int id);
 
    /** Map<ToyType, Integer> showByType() throws Exception; **/
 
