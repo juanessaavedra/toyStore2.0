@@ -2,6 +2,7 @@ package model;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -13,8 +14,11 @@ import java.time.LocalDateTime;
 public class Employees {
     private int id;
     private String name;
+    private String position;
+    private double salary;
     private String user;
     private String password;
-    private LocalDateTime birthdayDate;
+    private LocalDate entry_date;
+    private LocalDate birthdayDate;
     private String gender;
 }

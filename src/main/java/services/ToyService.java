@@ -1,6 +1,7 @@
 package services;
 
 import mapping.dtos.ToyDTO;
+import model.Toy;
 
 import java.util.List;
 
@@ -12,19 +13,19 @@ public interface ToyService {
 
 
 
-    boolean verifyToyExists (String name);
+    boolean verifyToyExists (int id);
 
     Integer totalToys () throws Exception;
 
-    Integer totalPrices () throws Exception;
+    double totalPrices () throws Exception;
 
-    <List> ToyDTO increase (ToyDTO toyDTO, int quantity)throws Exception;
+    List <ToyDTO> increase (Toy toy, int quantity)throws Exception;
 
-    <List> ToyDTO decrease (ToyDTO toyDTO, int quantity) throws Exception;
+    List <ToyDTO> decrease (Toy toyDTO, int quantity) throws Exception;
 
     ToyDTO findById (int id);
 
-   /** Map<ToyType, Integer> showByType() throws Exception; **/
+    List<ToyDTO> showByType();
 
 
 

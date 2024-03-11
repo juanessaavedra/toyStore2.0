@@ -3,6 +3,7 @@ package model;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,7 +18,7 @@ public class Customers {
     private String name;
     private String user;
     private String password;
-    private LocalDateTime birthdayDate;
+    private LocalDate birthdayDate;
     private String gender;
 
 }

@@ -1,57 +1,61 @@
-package repository.Customers;
+package repository.Sales;
 
 import config.DatabaseConnection;
 import model.Customers;
-import model.Toy;
-import model.ToyType;
+import model.Employees;
+import model.Sales;
+import repository.Customers.CustomersRepositoryJDBCImpl;
+import repository.Employees.EmployeesRepositoryJDBCImpl;
 import repository.Repository;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomersRepositoryJDBCImpl implements Repository<Customers> {
+public class SalesRepositoryJDBCImpl implements Repository<Sales> {
 
     private Connection getConnection() throws SQLException {
         return DatabaseConnection.getInstance();
     }
     @Override
-    public List<Customers> list() {
-        List<Customers> customersList =new ArrayList<>();
+    public List<Sales> list() {
+        List<Sales> salesList =new ArrayList<>();
         try(Statement statement=getConnection().createStatement();
             ResultSet resultSet=statement.executeQuery(
                     """
-                        SELECT * from Customers;
+                        SELECT * FROM Sales;
                         """
             ))
         {
             while (resultSet.next()){
-                Customers customer = new Customers();
-                customersList.add(customer);
+                Sales sales = new Sales();
+                salesList.add(sales);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return customersList;
+        return salesList;
     }
 
-    private Customers createCustomer(ResultSet resultSet) throws SQLException {
-        Customers customers = new Customers();
-        customers.setId(resultSet.getInt("id"));
-        customers.setName(resultSet.getString("name"));
-        customers.setUser(resultSet.getString("user"));
-        customers.setPassword(resultSet.getString("password"));
-        customers.setBirthdayDate(resultSet.getDate("birthday_date").toLocalDate());
-        customers.setGender(resultSet.getString("gender"));
-        return customers;
+    private Sales createSales(ResultSet resultSet) throws SQLException {
+        Sales sales = new Sales();
+        CustomersRepositoryJDBCImpl customersRepositoryJDBC = new CustomersRepositoryJDBCImpl();
+        EmployeesRepositoryJDBCImpl employeesRepositoryJDBC = new EmployeesRepositoryJDBCImpl();
+        sales.setId(resultSet.getInt("id"));
+        sales.setDate(resultSet.getDate("date").toLocalDate());
+        int idCustomer = resultSet.getInt("id_customer");
+        Customers customers = customersRepositoryJDBC.byId(idCustomer);
+        sales.setIdCustomer(customers);
+        int idEmployee = resultSet.getInt("id_employee");
+        Employees employees = employeesRepositoryJDBC.byId(idEmployee);
+        sales.setIdEmployee(employees);
+        return sales;
     }
 
     @Override
-    public Customers byId(Integer id) {
-
-        Customers customers = null;
+    public Sales byId(Integer id) {
+        Sales sales = null;
         try (PreparedStatement preparedStatement=getConnection()
                 .prepareStatement(""" 
                                     SELECT p.*, c.name as category_name, c.id as category_id
@@ -63,26 +67,24 @@ public class CustomersRepositoryJDBCImpl implements Repository<Customers> {
             preparedStatement.setLong(1,id);
             ResultSet resultSet= preparedStatement.executeQuery();
             if (resultSet.next()){
-                customers =createCustomer(resultSet);
+                sales =createSales(resultSet);
             }
         }catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return customers;
+        return sales;
     }
 
     @Override
-    public void save(Customers customers) {
+    public void save(Sales sales) {
         try(PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("""
-                                       INSERT INTO Customers(name,user,password,birthday_date,gender) values (?,?,?,?)
+                                       INSERT INTO Sales(date,id_customer,id_employee ) values (?,?,?)
                                        """)
         ){
-            preparedStatement.setString(1, customers.getName());
-            preparedStatement.setString(2, customers.getUser());
-            preparedStatement.setString(3, customers.getPassword());
-            preparedStatement.setDate(4, Date.valueOf(customers.getBirthdayDate()));
-            preparedStatement.setString(5, customers.getGender());
+            preparedStatement.setDate(1, Date.valueOf(sales.getDate()));
+            preparedStatement.setInt(2, sales.getIdCustomer().getId());
+            preparedStatement.setInt(3, sales.getIdEmployee().getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -94,7 +96,7 @@ public class CustomersRepositoryJDBCImpl implements Repository<Customers> {
     public void delete(Integer id) {
         try(PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("""
-                                      DELETE FROM Customers where id=?
+                                      DELETE FROM Sales where id=?
                                       """)
         ){
             preparedStatement.setInt(1,id);
@@ -103,5 +105,6 @@ public class CustomersRepositoryJDBCImpl implements Repository<Customers> {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
     }
 }

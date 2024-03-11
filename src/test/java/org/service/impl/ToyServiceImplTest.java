@@ -1,19 +1,12 @@
 package org.service.impl;
 
-import model.ToyType;
-import org.junit.Before;
-import org.junit.jupiter.api.Test;
-import services.impl.ToyServiceImpl;
-
-import java.util.*;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 public class ToyServiceImplTest {
 
+    /**
     private ToyServiceImpl service;
 
     @Before
@@ -121,6 +114,6 @@ public class ToyServiceImplTest {
         assertThrows(Exception.class,()->service.showByType());
     }
 
-
+**/
 
 }

@@ -11,7 +11,7 @@ import lombok.*;
 
 public class SalesDetails {
     private int id;
-    private int idSales;
-    private int idToys;
+    private Sales idSales;
+    private Toy idToys;
     private int quantity;
 }

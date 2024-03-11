@@ -2,8 +2,9 @@ package mapping.dtos;
 
 import lombok.Builder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
-public record EmployeesDTO(int id, String name, String user, String password, LocalDateTime birthdayDate, String gender) {
+public record EmployeesDTO(int id, String name,String position, double salary, String user, String password, LocalDate entry_date, LocalDate birthdayDate, String gender) {
 }

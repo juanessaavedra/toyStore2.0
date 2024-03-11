@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Builder
 @ToString
 
-public class Toy implements Serializable {
+public class Toy {
     private String name;
     private int id;
     private double price;

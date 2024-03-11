@@ -13,24 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ToyRepositoryJDBCImpl implements Repository<Toy> {
+public class ToyRepositoryJDBCImpl implements ToyRepository {
+
 
     private Connection getConnection() throws SQLException {
         return DatabaseConnection.getInstance();
     }
 
-    private Toy createProduct(ResultSet resultSet) throws SQLException {
+    private Toy createToy(ResultSet resultSet) throws SQLException {
         Toy toy = new Toy();
         toy.setId(resultSet.getInt("id"));
-        toy.setName(resultSet.getString("nombre"));
-        toy.setPrice(resultSet.getDouble("precio"));
-        java.sql.Date dbSqlDate = resultSet.getDate("fecha_registro");
-        if (dbSqlDate != null) {
-            LocalDate fechaRegistro = dbSqlDate.toLocalDate();
-            producto.setRegistrationDate(fechaRegistro.atStartOfDay()); // Convierte LocalDate a LocalDateTime al inicio del día
-        } else {
-            producto.setRegistrationDate(null);
-        }
+        toy.setName(resultSet.getString("name"));
+        toy.setPrice(resultSet.getDouble("price"));
+        toy.setPrice(resultSet.getDouble("quantity"));
         toy.setType(new ToyType(
                 resultSet.getInt("category_id"),
                 resultSet.getString("category_name")
@@ -39,24 +34,11 @@ public class ToyRepositoryJDBCImpl implements Repository<Toy> {
         return toy;
     }
 
-   /* @Override
-    public List<Product> list() {
-        List<Product> productoList = new ArrayList<>();
-        try (Statement statement = getConnection().createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * from productos")) {
-            while (resultSet.next()) {
-                Product product = createProduct(resultSet);
-                productoList.add(product);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return productoList;
-    }*/
+
 
     @Override
-    public List<Toy> list() {
-        List<Toy>productosList=new ArrayList<>();
+    public List<Toy> listToys() {
+        List<Toy>productosList = new ArrayList<>();
         try(Statement statement=getConnection().createStatement();
             ResultSet resultSet=statement.executeQuery(
                     """
@@ -67,8 +49,8 @@ public class ToyRepositoryJDBCImpl implements Repository<Toy> {
             ))
         {
             while (resultSet.next()){
-                Toy producto=createProduct(resultSet);
-                productosList.add(producto);
+                Toy toy =createToy(resultSet);
+                productosList.add(toy);
             }
 
         } catch (SQLException e) {
@@ -78,59 +60,16 @@ public class ToyRepositoryJDBCImpl implements Repository<Toy> {
     }
 
     @Override
-    public Toy byId(Integer id) {
-        Toy producto=null;
-        try (PreparedStatement preparedStatement=getConnection()
-                .prepareStatement(""" 
-                                    SELECT p.*, c.name as category_name, c.id as category_id
-                                    FROM productos AS p
-                                    INNER JOIN categories AS c ON p.categoria_id = c.id
-                                    WHERE p.id=?
-                                    """)
-        ) {
-            preparedStatement.setLong(1,id);
-            ResultSet resultSet= preparedStatement.executeQuery();
-            if (resultSet.next()){
-                producto=createProduct(resultSet);
-            }
-        }catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return producto;
-    }
-
-
-
-/*    @Override
-    public Product byId(int id) {
-        Product product = null;
-        try (PreparedStatement preparedStatement = getConnection()
-                .prepareStatement("SELECT * FROM productos WHERE id =?")) {
-            preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                product = createProduct(resultSet);
-            }
-            resultSet.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return product;
-    }*/
-
-
-    @Override
-    public void save(Toy toy    ) {
+    public void save(Toy t) {
         try(PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("""
-                                       INSERT INTO Productos(nombre,precio,fecha_registro,categoria_id) values (?,?,?,?)
+                                       INSERT INTO Toys(name,price,quantity,id_category) values (?,?,?,?)
                                        """)
         ){
-            preparedStatement.setString(1, toy.getName());
-            preparedStatement.setDouble(2, toy.getPrice());
-            LocalDateTime fechaRegistro = toy.getRegistrationDate();
-            preparedStatement.setDate(3, Date.valueOf(fechaRegistro.toLocalDate()));
-            preparedStatement.setInt(4,toy.getType().getId());
+            preparedStatement.setString(1, t.getName());
+            preparedStatement.setDouble(2, t.getPrice());
+            preparedStatement.setInt(3,t.getQuantity());
+            preparedStatement.setInt(4,t.getType().getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -138,11 +77,12 @@ public class ToyRepositoryJDBCImpl implements Repository<Toy> {
         }
     }
 
+
     @Override
     public void delete(Integer id) {
         try(PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("""
-                                      DELETE FROM Productos where id=?
+                                      DELETE FROM Toys where id=?
                                       """)
         ){
             preparedStatement.setInt(1,id);
@@ -154,17 +94,151 @@ public class ToyRepositoryJDBCImpl implements Repository<Toy> {
     }
 
     @Override
+    public boolean verifyToyExists(int id) {
+        try(PreparedStatement preparedStatement = getConnection()
+                .prepareStatement("""
+                                      SELECT * FROM Toys where id=?
+                                      """)
+        ){
+            preparedStatement.setInt(1,id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    @Override
+    public Integer totalToys() throws Exception {
+        int totalToys = 0;
+
+        try (PreparedStatement preparedStatement = getConnection()
+                .prepareStatement("""
+
+                        SELECT SUM(quantity) as total_toys FROM Toys""")) {
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                totalToys = resultSet.getInt("total_toys");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return totalToys;
+    }
+
+
+    @Override
+    public double totalPrices() throws Exception {
+            double totalPrice = 0.0;
+
+            try (PreparedStatement preparedStatement = getConnection()
+                    .prepareStatement("""
+                SELECT SUM(price) as total_price FROM Toys""")) {
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    totalPrice = resultSet.getDouble("total_price");
+                }
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            return totalPrice;
+        }
+
+    @Override
+    public List<Toy> increase(Toy toy, int quantity) throws Exception {
+        List<Toy> toyList = null;
+        try(PreparedStatement preparedStatement = getConnection()
+                .prepareStatement("""
+                                    UPDATE Toys SET quantity = quantity + ? WHERE id = ?;
+                                      """
+                )
+        ){
+            preparedStatement.setInt (1, quantity);
+            preparedStatement.setDouble(2, toy.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                Toy toy1 = createToy(resultSet);
+                toyList.add(toy1);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return toyList;
+    }
+
+    @Override
+    public List<Toy> decrease(Toy toy, int quantity) throws Exception {
+        List<Toy> toyList = null;
+        try(PreparedStatement preparedStatement = getConnection()
+                .prepareStatement("""
+                                    UPDATE Toys SET quantity = quantity - ? WHERE id = ?;
+                                      """
+                )
+        ){
+            preparedStatement.setInt (1, quantity);
+            preparedStatement.setDouble(2, toy.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                Toy toy1 = createToy(resultSet);
+                toyList.add(toy1);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return toyList;
+    }
+
+
+    @Override
+    public Toy findById(int id) {
+        Toy toy = null;
+        try (PreparedStatement preparedStatement=getConnection()
+                .prepareStatement(""" 
+                                    SELECT t.*, c.name as category_name, c.id as category_id
+                                    FROM toys AS t
+                                    INNER JOIN categories AS c ON t.id_category = c.id
+                                    WHERE t.id=?
+                                    """)
+        ) {
+            preparedStatement.setLong(1,id);
+            ResultSet resultSet= preparedStatement.executeQuery();
+            if (resultSet.next()){
+                toy =createToy(resultSet);
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return toy;
+    }
+
+    @Override
+    public List<Toy> showByType() {
+        return null;
+    }
+
+    @Override
     public void update(Toy toy  ) {
         try(PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("""
-                                    UPDATE Productos SET nombre = ?, precio = ?, fecha_registro = ? , categoria_id=? WHERE id = ?;
+                                    UPDATE Toys SET name = ?, price = ?, quantity = ?, id_category=? WHERE id = ?;
                                       """
                 )
         ){
             preparedStatement.setString(1, toy.getName());
             preparedStatement.setDouble(2, toy.getPrice());
-            LocalDateTime fechaRegistro = toy.getRegistrationDate();
-            preparedStatement.setDate(3, Date.valueOf(fechaRegistro.toLocalDate()));
+            preparedStatement.setDouble(3, toy.getQuantity());
             preparedStatement.setInt(4,toy.getType().getId());
             preparedStatement.setInt(5,toy.getId());
             preparedStatement.executeUpdate();
@@ -177,5 +251,6 @@ public class ToyRepositoryJDBCImpl implements Repository<Toy> {
 
 
 }
+
 
 

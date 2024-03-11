@@ -7,24 +7,26 @@ import java.util.List;
 public interface ToyRepository {
 
 
-    List<Toy> addToy (Toy toy) throws  Exception;
     List<Toy> listToys();
 
+    void save (Toy t);
 
+    void delete(Integer id);
 
-    boolean verifyToyExists (String name);
+    boolean verifyToyExists (int id);
 
     Integer totalToys () throws Exception;
 
-    Integer totalPrices () throws Exception;
+    double totalPrices () throws Exception;
 
-    <List> Toy increase (Toy toyDTO, int quantity)throws Exception;
+    List<Toy> increase (Toy toyDTO, int quantity)throws Exception;
 
-    <List> Toy decrease (Toy toyDTO, int quantity) throws Exception;
+    List<Toy> decrease (Toy toyDTO, int quantity) throws Exception;
 
     Toy findById (int id);
 
-    /**Map<ToyType, Integer> showByType() throws Exception;**/
+    List<Toy> showByType();
+
 
 
 
