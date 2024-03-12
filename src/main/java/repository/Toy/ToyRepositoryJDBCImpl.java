@@ -4,11 +4,8 @@ import config.DatabaseConnection;
 
 import model.Toy;
 import model.ToyType;
-import repository.Repository;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,25 +35,25 @@ public class ToyRepositoryJDBCImpl implements ToyRepository {
 
     @Override
     public List<Toy> listToys() {
-        List<Toy>productosList = new ArrayList<>();
+        List<Toy>ToysList = new ArrayList<>();
         try(Statement statement=getConnection().createStatement();
             ResultSet resultSet=statement.executeQuery(
                     """
-                        SELECT p.*, c.name as category_name, c.id as category_id
-                        FROM productos AS p
-                        INNER JOIN categories AS c ON p.categoria_id = c.id;
+                        SELECT t.*, c.name as category_name, c.id as category_id
+                        FROM Toys AS t
+                        INNER JOIN Categories AS c ON t.id_category = c.id;
                         """
             ))
         {
             while (resultSet.next()){
                 Toy toy =createToy(resultSet);
-                productosList.add(toy);
+                ToysList.add(toy);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return productosList;
+        return ToysList;
     }
 
     @Override
@@ -117,7 +114,7 @@ public class ToyRepositoryJDBCImpl implements ToyRepository {
         try (PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("""
 
-                        SELECT SUM(quantity) as total_toys FROM Toys""")) {
+                        SELECT SUM(quantity) as Total_toys FROM Toys""")) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -139,7 +136,7 @@ public class ToyRepositoryJDBCImpl implements ToyRepository {
 
             try (PreparedStatement preparedStatement = getConnection()
                     .prepareStatement("""
-                SELECT SUM(price) as total_price FROM Toys""")) {
+                SELECT SUM(price) as Total_price FROM Toys""")) {
 
                 ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -225,11 +222,32 @@ public class ToyRepositoryJDBCImpl implements ToyRepository {
 
     @Override
     public List<Toy> showByType() {
-        return null;
+        List<Toy> toyList = new ArrayList<>();
+        try(PreparedStatement preparedStatement = getConnection()
+                .prepareStatement("""
+                                    SELECT t.*
+                                    FROM Toys t
+                                    INNER JOIN Categories c ON t.category_id = c.category_id
+                                    WHERE c.category_name=?
+                                      """
+                )
+        ){
+            preparedStatement.setString (1, "Category name");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                Toy toy1 = createToy(resultSet);
+                toyList.add(toy1);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return toyList;
+
     }
 
     @Override
-    public void update(Toy toy  ) {
+    public void update(Toy toy) {
         try(PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("""
                                     UPDATE Toys SET name = ?, price = ?, quantity = ?, id_category=? WHERE id = ?;

@@ -2,10 +2,10 @@ package view;
 
 
 import config.DatabaseConnection;
-import excepcions.SecondException;
+import excepctions.FirstException;
 import mapping.dtos.*;
 import mapping.mappers.ToyMapper;
-import model.Customers;
+import model.Toy;
 import model.ToyType;
 import repository.Repository;
 import services.ToyService;
@@ -37,8 +37,8 @@ public class ToyStore {
 
             do {
                 Scanner s = new Scanner(System.in);
-                System.out.println("MENU");
-                System.out.println("0. Exit \n 1. Toys for each type   \n2. Add Toys  \n 3. List Toys \n 4.Show total toys \n 5. Show total prices \n  6. Increase \n 7. Decrease");
+                System.out.println("MENU TOYS");
+                System.out.println("0. Exit \n 1. Toys for each type   \n2. Add Toys  \n 3. List Toys \n 4.Show total toys \n 5. Show total prices \n  6. Increase \n 7. Decrease \n 8. List Customers \n 9. New Customer \n 10. List Employees \n 11. New Employee \n 12. List Sails \n 13. New Sail \n 14. List Sails Details \n 15. New Sail Detail");
                 option = s.next();
                 switch (option) {
 
@@ -53,12 +53,14 @@ public class ToyStore {
                         System.out.println("Enter the name:");
                         String name = s.next();
                         System.out.println("Enter id:");
-                        String id = s.next();
+                        Integer id = Integer.valueOf(s.next());
                         System.out.println("Enter the price");
                         Integer price = Integer.valueOf(s.next());
                         System.out.println("Choose type of toy: \n 0.Female \n 1.Male \n 2.Unisex");
+                        String type = s.next();
+                        ToyType toyType = new ToyType(id, type);
 
-                        toyService.addToy(new ToyDTO(name, id, price, +1, new ToyType().getName()));
+                        toyService.addToy(new ToyDTO(name, id, price, +1, toyType));
 
                     }
                     case "3" -> {
@@ -68,7 +70,7 @@ public class ToyStore {
                             if (!list.isEmpty()) {
                                 for (ToyDTO toys : list) {
                                     System.out.println(toys);
-                                    System.out.println("Loading...");
+                                    System.out.println("Loading");
                                     try {
                                         Thread.sleep(5000);
                                     } catch (InterruptedException e) {
@@ -97,13 +99,14 @@ public class ToyStore {
 
                     case "6" -> {
                         System.out.println("INCREASE");
-                        System.out.println("Enter the id toy");
-
-                        String id = s.next();
+                        System.out.println("Enter the name of the toy ");
+                        String name = s.next();
+                        System.out.println("Enter the id");
+                        Integer id = s.nextInt();
                         if (id == null) {
-                            throw new SecondException("Id invalid"); //Exception lectura
+                            throw new FirstException("Id invalid"); //Exception lecture
                         }
-                        System.out.println("Entaser the amount");
+                        System.out.println("Enter the amount");
                         int amount = Integer.parseInt(s.next());
                         ToyDTO toyStoreDTO = toyService.findById(id);
                         System.out.println(toyService.increase(ToyMapper.mapFromDTO(toyStoreDTO), amount));
@@ -112,41 +115,51 @@ public class ToyStore {
                     case "7" -> {
                         System.out.println("DECREASE");
                         System.out.println("Enter the id toy");
-                        String id = s.next();
+                        Integer id = s.nextInt();
                         System.out.println("Enter the amount");
                         int amount = Integer.parseInt(s.next());
                         if (id == null) {
-                            throw new SecondException("Id invalid");
+                            throw new FirstException("Id invalid");
                         }
                         ToyDTO toyStoreDTO = toyService.findById(id);
                         System.out.println(toyService.decrease(ToyMapper.mapFromDTO(toyStoreDTO), amount));
                     }
 
+                    case "8" -> {
+                        System.out.println("LIST CUSTOMERS");
+                    }
+
+                    case "9" -> {
+                        System.out.println("NEW CUSTOMER");
+                    }
+                    case "10" -> {
+                        System.out.println("LIST EMPLOYEES");
+
+                    }
+                    case "11" -> {
+                        System.out.println("NEW EMPLOYEE");
+                    }
+                    case "12" -> {
+                        System.out.println("LIST SAILS");
+                    }
+                    case "13" -> {
+                        System.out.println("NEW SAIL");
+
+                    }
+                    case "14" -> {
+                        System.out.println("LIST SAILS DETAILS");
+                    }
+                    case "15" -> {
+                        System.out.println("NEW SAIL DETAILS");
+                    }
+                    default -> System.out.println("Invalid option");
+
 //
                 }
             } while (!option.equals("0")) ;
         }
-            /* toyService.addToy(new ToyDTO("prueba1", 20, 100, new ToyType(1,"muebles")));
-            toyService.listToys().stream().forEach(System.out::println);
-            /*Repository<Product> repository = new ProductRepositoryImpl();
-            System.out.println("**** List products from database");
-            repository.list().stream().forEach(System.out::println);
-            Thread.sleep(3000);
-            System.out.println("**** Get by Id: 1");
-            System.out.println(repository.byId(1).toString());
-            Thread.sleep(3000);
 
-            System.out.println("**** Save product ");
-            repository.save(new Product(0, "testClase2",2.00, LocalDateTime.now(),
-                    new Category(1,"muebles")));
-            repository.list().stream().forEach(System.out::println);
-            Thread.sleep(3000);
-            System.out.println("**** Delete product 13");
-
-            repository.delete(13);
-            repository.list().stream().forEach(System.out::println);*/
-
-        }catch (SQLException e) {
+        catch (SQLException e) {
             e.printStackTrace();
         }
     }

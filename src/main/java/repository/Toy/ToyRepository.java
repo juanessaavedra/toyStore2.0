@@ -28,14 +28,5 @@ public interface ToyRepository {
     List<Toy> showByType();
 
 
-
-
-
-
-
-
-
-
-
-
+    void update(Toy toy);
 }

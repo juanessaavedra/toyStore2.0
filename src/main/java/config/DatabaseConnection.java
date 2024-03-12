@@ -9,7 +9,7 @@ public class DatabaseConnection { //Patron singleton
 
     private static String user = "root";
 
-    private static String password = "";
+    private static String password = "admin";
 
     private static Connection connection;
 

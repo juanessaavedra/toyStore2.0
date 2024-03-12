@@ -103,8 +103,9 @@ public class SalesRepositoryJDBCImpl implements Repository<Sales> {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
     }
-}
+
+
