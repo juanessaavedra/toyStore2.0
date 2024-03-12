@@ -25,7 +25,7 @@ public interface ToyRepository {
 
     Toy findById (int id);
 
-    List<Toy> showByType();
+    List<Toy> showByType(int value);
 
 
     void update(Toy toy);

@@ -30,7 +30,7 @@ public class SalesDetailsRepositoryJDBCImpl implements Repository<SalesDetails> 
             ))
         {
             while (resultSet.next()){
-                SalesDetails salesDetails = new SalesDetails();
+                SalesDetails salesDetails = createSalesDetails(resultSet);
                 employeesList.add(salesDetails);
             }
 

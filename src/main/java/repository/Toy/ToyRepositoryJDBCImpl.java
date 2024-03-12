@@ -221,18 +221,18 @@ public class ToyRepositoryJDBCImpl implements ToyRepository {
     }
 
     @Override
-    public List<Toy> showByType() {
+    public List<Toy> showByType(int value) {
         List<Toy> toyList = new ArrayList<>();
         try(PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("""
                                     SELECT t.*
-                                    FROM Toys t
-                                    INNER JOIN Categories c ON t.category_id = c.category_id
+                                    FROM Toys as t
+                                    INNER JOIN Categories AS c ON t.id_category = c.id
                                     WHERE c.category_name=?
                                       """
                 )
         ){
-            preparedStatement.setString (1, "Category name");
+            preparedStatement.setInt (1, value);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                 Toy toy1 = createToy(resultSet);

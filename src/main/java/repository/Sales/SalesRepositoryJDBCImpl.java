@@ -28,7 +28,7 @@ public class SalesRepositoryJDBCImpl implements Repository<Sales> {
             ))
         {
             while (resultSet.next()){
-                Sales sales = new Sales();
+                Sales sales = createSales(resultSet);
                 salesList.add(sales);
             }
 

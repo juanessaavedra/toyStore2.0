@@ -27,7 +27,7 @@ public class CustomersRepositoryJDBCImpl implements Repository<Customers> {
             ))
         {
             while (resultSet.next()){
-                Customers customer = new Customers();
+                Customers customer = createCustomer(resultSet);
                 customersList.add(customer);
             }
 

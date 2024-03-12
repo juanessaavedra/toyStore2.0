@@ -27,7 +27,7 @@ public class EmployeesRepositoryJDBCImpl implements Repository<Employees> {
             ))
         {
             while (resultSet.next()){
-                Employees employees = new Employees();
+                Employees employees = createEmployee(resultSet);
                 employeesList.add(employees);
             }
 

@@ -44,8 +44,6 @@ public class ToyStore {
 
                     case "1" -> {
                         System.out.println("Toys for each type");
-                        System.out.println("Enter the toy name");
-                        String name = s.next();
                         System.out.println(toyService.showByType());
                     }
                     case "2" -> {
@@ -99,8 +97,6 @@ public class ToyStore {
 
                     case "6" -> {
                         System.out.println("INCREASE");
-                        System.out.println("Enter the name of the toy ");
-                        String name = s.next();
                         System.out.println("Enter the id");
                         Integer id = s.nextInt();
                         if (id == null) {
@@ -127,30 +123,66 @@ public class ToyStore {
 
                     case "8" -> {
                         System.out.println("LIST CUSTOMERS");
+                            List<CustomersDTO> listCustomers = customerService.list();
+                            for (CustomersDTO customersDTO : listCustomers) {
+                                System.out.println(customersDTO);
+                            }
+
+
                     }
 
                     case "9" -> {
                         System.out.println("NEW CUSTOMER");
+                        System.out.println("Enter your name");
+                        String name = s.next();
+                        System.out.println("Enter your new user");
+                        String user = s.next();
+                        System.out.println("Enter your password");
+                        String password = s.next();
+                        System.out.println("Enter your birthday date");
+                        String birthday = s.next();
+                        System.out.println("Enter your gender");
+                        String gender = s.next();
+                        /*int idNewCustomer =
+                                customerService.save(CustomersDTO.builder()
+                                        .name(name)
+                                        .user(user)
+                                        .password(password)
+                                        .birthdayDate(birthday.)
+                                        .gender(gender)
+                                        .build()); */
+
                     }
                     case "10" -> {
                         System.out.println("LIST EMPLOYEES");
-
+                        List<EmployeesDTO> listEmployees = employeesService.list();
+                        for (EmployeesDTO employeesDTO : listEmployees) {
+                            System.out.println(employeesDTO);
+                        }
                     }
                     case "11" -> {
                         System.out.println("NEW EMPLOYEE");
                     }
                     case "12" -> {
-                        System.out.println("LIST SAILS");
+                        System.out.println("LIST SALES");
+                        List<SalesDTO> listSales = salesService.list();
+                        for (SalesDTO salesDTO : listSales) {
+                            System.out.println(salesDTO);
+                        }
                     }
                     case "13" -> {
-                        System.out.println("NEW SAIL");
+                        System.out.println("NEW SALE");
 
                     }
                     case "14" -> {
-                        System.out.println("LIST SAILS DETAILS");
+                        System.out.println("LIST SALES DETAILS");
+                        List<SalesDetailsDTO> listSailsDetails = salesDetailsService.list();
+                        for (SalesDetailsDTO salesDetailsDTO : listSailsDetails) {
+                            System.out.println(salesDetailsDTO);
+                        }
                     }
                     case "15" -> {
-                        System.out.println("NEW SAIL DETAILS");
+                        System.out.println("NEW SALES DETAILS");
                     }
                     default -> System.out.println("Invalid option");
 
