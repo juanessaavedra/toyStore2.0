@@ -17,6 +17,8 @@ import services.impl.Toy.ToyServiceImpl;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
@@ -32,6 +34,10 @@ public class ToyStore {
             Repository<EmployeesDTO> employeesService = new EmployeesServiceImpl();
             Repository<SalesDTO> salesService = new SalesServiceImpl();
             Repository<SalesDetailsDTO> salesDetailsService = new SalesDetailsServiceImpl();
+            List<ToyType> toyTypeList = new ArrayList<>();
+            toyTypeList.add(new ToyType(1,"Female"));
+            toyTypeList.add(new ToyType(2,"Male"));
+            toyTypeList.add(new ToyType(3,"Unisex"));
 
 
 
@@ -50,15 +56,19 @@ public class ToyStore {
                         System.out.println("ADD TOY");
                         System.out.println("Enter the name:");
                         String name = s.next();
-                        System.out.println("Enter id:");
-                        Integer id = Integer.valueOf(s.next());
                         System.out.println("Enter the price");
                         Integer price = Integer.valueOf(s.next());
+                        System.out.println("Enter the quantity");
+                        Integer quantity = Integer.valueOf(s.next());
                         System.out.println("Choose type of toy: \n 0.Female \n 1.Male \n 2.Unisex");
-                        String type = s.next();
-                        ToyType toyType = new ToyType(id, type);
+                        Integer type = Integer.parseInt(s.next());
 
-                        toyService.addToy(new ToyDTO(name, id, price, +1, toyType));
+                        toyService.addToy(ToyDTO.builder()
+                                        .name(name)
+                                        .price(price)
+                                        .quantity(quantity)
+                                        .type(toyTypeList.get(type))
+                                .build());
 
                     }
                     case "3" -> {
@@ -143,14 +153,6 @@ public class ToyStore {
                         String birthday = s.next();
                         System.out.println("Enter your gender");
                         String gender = s.next();
-                        /*int idNewCustomer =
-                                customerService.save(CustomersDTO.builder()
-                                        .name(name)
-                                        .user(user)
-                                        .password(password)
-                                        .birthdayDate(birthday.)
-                                        .gender(gender)
-                                        .build()); */
 
                     }
                     case "10" -> {
@@ -162,6 +164,7 @@ public class ToyStore {
                     }
                     case "11" -> {
                         System.out.println("NEW EMPLOYEE");
+
                     }
                     case "12" -> {
                         System.out.println("LIST SALES");

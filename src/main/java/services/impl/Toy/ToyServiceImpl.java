@@ -21,11 +21,14 @@ public class ToyServiceImpl implements ToyService {
     }
 
     @Override
-    public List<ToyDTO> addToy(ToyDTO toy) throws Exception {
+    public void addToy(ToyDTO toy) throws Exception {
         if (!verifyToyExists(toy.id())) {
+
             toyRepository.save(ToyMapper.mapFromDTO(toy));
+        } else {
+            throw new Exception("The toy has already been created");
         }
-        throw new Exception("The toy has already been created");
+
     }
 
     @Override

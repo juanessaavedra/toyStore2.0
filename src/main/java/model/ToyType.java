@@ -9,6 +9,7 @@ import java.util.Arrays;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 
 
 public class ToyType {

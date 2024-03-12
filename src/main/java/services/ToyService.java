@@ -8,7 +8,7 @@ import java.util.List;
 public interface ToyService {
 
 
-    List<ToyDTO> addToy (ToyDTO toy) throws  Exception;
+    void addToy (ToyDTO toy) throws  Exception;
     List<ToyDTO> listToys();
 
 
